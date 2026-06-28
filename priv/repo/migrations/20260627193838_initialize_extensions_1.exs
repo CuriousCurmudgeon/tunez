@@ -114,41 +114,13 @@ defmodule Tunez.Repo.Migrations.InitializeExtensions1 do
     STABLE
     SET search_path = '';
     """)
-
-    execute("""
-    CREATE OR REPLACE FUNCTION uuid_generate_v7()
-    RETURNS UUID
-    AS $$
-    DECLARE
-      timestamp    TIMESTAMPTZ;
-      microseconds INT;
-    BEGIN
-      timestamp    = clock_timestamp();
-      microseconds = (cast(extract(microseconds FROM timestamp)::INT - (floor(extract(milliseconds FROM timestamp))::INT * 1000) AS DOUBLE PRECISION) * 4.096)::INT;
-
-      RETURN encode(
-        set_byte(
-          set_byte(
-            overlay(uuid_send(gen_random_uuid()) placing substring(int8send(floor(extract(epoch FROM timestamp) * 1000)::BIGINT) FROM 3) FROM 1 FOR 6
-          ),
-          6, (b'0111' || (microseconds >> 8)::bit(4))::bit(8)::int
-        ),
-        7, microseconds::bit(8)::int
-      ),
-      'hex')::UUID;
-    END
-    $$
-    LANGUAGE PLPGSQL
-    SET search_path = ''
-    VOLATILE;
-    """)
   end
 
   def down do
     # Uncomment this if you actually want to uninstall the extensions
     # when this migration is rolled back:
     execute(
-      "DROP FUNCTION IF EXISTS uuid_generate_v7(), ash_raise_error(jsonb), ash_raise_error(jsonb, ANYCOMPATIBLE), ash_elixir_and(BOOLEAN, ANYCOMPATIBLE), ash_elixir_and(ANYCOMPATIBLE, ANYCOMPATIBLE), ash_elixir_or(ANYCOMPATIBLE, ANYCOMPATIBLE), ash_elixir_or(BOOLEAN, ANYCOMPATIBLE), ash_trim_whitespace(text[]), ash_required(ANYCOMPATIBLE, jsonb)"
+      "DROP FUNCTION IF EXISTS ash_raise_error(jsonb), ash_raise_error(jsonb, ANYCOMPATIBLE), ash_elixir_and(BOOLEAN, ANYCOMPATIBLE), ash_elixir_and(ANYCOMPATIBLE, ANYCOMPATIBLE), ash_elixir_or(ANYCOMPATIBLE, ANYCOMPATIBLE), ash_elixir_or(BOOLEAN, ANYCOMPATIBLE), ash_trim_whitespace(text[]), ash_required(ANYCOMPATIBLE, jsonb)"
     )
   end
 end
