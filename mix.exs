@@ -12,7 +12,8 @@ defmodule Tunez.MixProject do
       aliases: aliases(),
       deps: deps(),
       listeners: [Phoenix.CodeReloader],
-      compilers: [:phoenix_live_view] ++ Mix.compilers()
+      compilers: [:phoenix_live_view] ++ Mix.compilers(),
+      usage_rules: usage_rules()
     ]
   end
 
@@ -35,6 +36,7 @@ defmodule Tunez.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:usage_rules, "~> 1.0", only: [:dev]},
       {:ash_postgres, "~> 2.0"},
       {:sourceror, "~> 1.8", only: [:dev, :test]},
       {:ash, "~> 3.0"},
@@ -93,6 +95,34 @@ defmodule Tunez.MixProject do
         "tailwind tunez --minify",
         "esbuild tunez --minify",
         "phx.digest"
+      ]
+    ]
+  end
+
+  defp usage_rules do
+    # Example for those using claude.
+    [
+      file: "CLAUDE.md",
+      # rules to include directly in CLAUDE.md
+      usage_rules: ["usage_rules:all"],
+      skills: [
+        location: ".claude/skills",
+        # build skills that combine multiple usage rules
+        build: [
+          "ash-framework": [
+            # The description tells people how to use this skill.
+            description:
+              "Use this skill working with Ash Framework or any of its extensions. Always consult this when making any domain changes, features or fixes.",
+            # Include all Ash dependencies
+            usage_rules: [:ash, ~r/^ash_/]
+          ],
+          "phoenix-framework": [
+            description:
+              "Use this skill working with Phoenix Framework. Consult this when working with the web layer, controllers, views, liveviews etc.",
+            # Include all Phoenix dependencies
+            usage_rules: [:phoenix, ~r/^phoenix_/]
+          ]
+        ]
       ]
     ]
   end
