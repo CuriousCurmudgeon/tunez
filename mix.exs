@@ -65,7 +65,8 @@ defmodule Tunez.MixProject do
       {:bandit, "~> 1.5"},
       {:igniter, "~> 0.3", only: [:dev]},
       {:lazy_html, ">= 0.0.0", only: :test},
-      {:phoenix_test, "~> 0.9", only: :test, runtime: false}
+      {:phoenix_test, "~> 0.9", only: :test, runtime: false},
+      {:tidewave, "~> 0.5", only: :dev}
     ]
   end
 
