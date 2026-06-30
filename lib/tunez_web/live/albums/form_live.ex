@@ -113,7 +113,7 @@ defmodule TunezWeb.Albums.FormLive do
   end
 
   def handle_event("save", %{"form" => form_data}, socket) do
-    case AshPhoenix.Form.submit(socket.assigns.form, params: form_data) |> dbg do
+    case AshPhoenix.Form.submit(socket.assigns.form, params: form_data) do
       {:ok, album} ->
         socket =
           socket

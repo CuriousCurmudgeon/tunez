@@ -28,7 +28,8 @@ defmodule Tunez.Repo.Migrations.CreateAlbums do
             name: "albums_artist_id_fkey",
             type: :uuid,
             prefix: "public"
-          ), null: false
+          ),
+          null: false
     end
   end
 
