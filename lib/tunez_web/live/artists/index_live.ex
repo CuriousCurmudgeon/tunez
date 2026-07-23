@@ -186,7 +186,9 @@ defmodule TunezWeb.Artists.IndexLive do
     [
       {"recently updated", "-updated_at"},
       {"recently added", "-inserted_at"},
-      {"name", "name"}
+      {"name", "name"},
+      {"number of albums", "-album_count"},
+      {"latest album release", "--latest_album_year_released"}
     ]
   end
 
