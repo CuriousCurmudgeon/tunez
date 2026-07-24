@@ -28,7 +28,7 @@ defmodule TunezWeb.Endpoint do
   )
 
   if Mix.env() == :dev do
-    plug(Tidewave)
+    plug(Tidewave, Application.compile_env(:tunez, :tidewave, []))
   end
 
   # Code reloading can be explicitly enabled under the

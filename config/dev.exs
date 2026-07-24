@@ -19,7 +19,12 @@ config :tunez, Tunez.Repo,
 # to bundle .js and .css sources.
 # Inside the dev container, bind to all interfaces so the published port is
 # reachable from the host browser. On the host, stay on loopback only.
-http_ip = if System.get_env("DATABASE_HOST"), do: {0, 0, 0, 0}, else: {127, 0, 0, 1}
+in_devcontainer? = System.get_env("DATABASE_HOST") != nil
+http_ip = if in_devcontainer?, do: {0, 0, 0, 0}, else: {127, 0, 0, 1}
+
+# Inside the dev container, the host browser reaches Tidewave through the
+# forwarded port, so its requests don't appear to originate from localhost.
+config :tunez, :tidewave, allow_remote_access: in_devcontainer?
 
 config :tunez, TunezWeb.Endpoint,
   http: [ip: http_ip, port: 4000],
