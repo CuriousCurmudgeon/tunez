@@ -9,7 +9,7 @@ config :ash, policies: [show_policy_breakdowns?: true], disable_async?: true
 config :tunez, Tunez.Repo,
   username: "postgres",
   password: "postgres",
-  hostname: "localhost",
+  hostname: System.get_env("DATABASE_HOST", "localhost"),
   database: "tunez_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: System.schedulers_online() * 2

@@ -1,0 +1,26 @@
+{
+  "name": "Tunez",
+  "dockerComposeFile": [
+    "../docker-compose.yml",
+    "docker-compose.yml"
+  ],
+  "service": "app",
+  "workspaceFolder": "/workspaces/tunez",
+  "remoteUser": "vscode",
+  "forwardPorts": [4000],
+  "portsAttributes": {
+    "4000": {
+      "label": "Phoenix",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "sudo chown vscode:vscode _build deps && mix local.hex --force && mix local.rebar --force && mix setup",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "JakeBecker.elixir-ls",
+        "phoenixframework.phoenix"
+      ]
+    }
+  }
+}

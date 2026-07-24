@@ -5,7 +5,7 @@ config :ash, policies: [show_policy_breakdowns?: true]
 config :tunez, Tunez.Repo,
   username: "postgres",
   password: "postgres",
-  hostname: "localhost",
+  hostname: System.get_env("DATABASE_HOST", "localhost"),
   database: "tunez_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,

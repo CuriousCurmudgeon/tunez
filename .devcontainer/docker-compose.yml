@@ -1,0 +1,28 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - .:/workspaces/tunez:cached
+      # Keep build artifacts and deps in named volumes so the Linux-compiled
+      # output never clashes with the host's (e.g. macOS) native build.
+      - deps:/workspaces/tunez/deps
+      - build:/workspaces/tunez/_build
+    environment:
+      DATABASE_HOST: db
+    command: sleep infinity
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d tunez_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  deps:
+  build:
