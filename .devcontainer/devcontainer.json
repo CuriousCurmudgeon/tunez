@@ -14,7 +14,13 @@
       "onAutoForward": "notify"
     }
   },
-  "postCreateCommand": "sudo chown vscode:vscode _build deps && mix local.hex --force && mix local.rebar --force && mix setup",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {}
+  },
+  "mounts": [
+    "source=tunez-claude-config,target=/home/vscode/.claude,type=volume"
+  ],
+  "postCreateCommand": "sudo chown vscode:vscode _build deps /home/vscode/.claude && mix local.hex --force && mix local.rebar --force && npm install -g @anthropic-ai/claude-code && mix setup",
   "customizations": {
     "vscode": {
       "extensions": [

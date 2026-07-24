@@ -11,6 +11,8 @@ services:
       - build:/workspaces/tunez/_build
     environment:
       DATABASE_HOST: db
+    ports:
+      - "4000:4000"
     command: sleep infinity
     depends_on:
       db:

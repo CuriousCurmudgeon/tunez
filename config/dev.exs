@@ -17,10 +17,12 @@ config :tunez, Tunez.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
+# Inside the dev container, bind to all interfaces so the published port is
+# reachable from the host browser. On the host, stay on loopback only.
+http_ip = if System.get_env("DATABASE_HOST"), do: {0, 0, 0, 0}, else: {127, 0, 0, 1}
+
 config :tunez, TunezWeb.Endpoint,
-  # Binding to loopback ipv4 address prevents access from other machines.
-  # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: http_ip, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
