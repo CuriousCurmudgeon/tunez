@@ -1,7 +1,9 @@
 FROM mcr.microsoft.com/devcontainers/base:bookworm
 
 # Build dependencies for compiling Erlang/OTP from source (via asdf/kerl),
-# unzip for the asdf elixir plugin, and inotify-tools for Phoenix live reload.
+# unzip for the asdf elixir plugin, inotify-tools for Phoenix live reload, and
+# watchman for the Tailwind CLI's --watch mode (without it, Tailwind falls
+# back to a slower watcher and logs "sh: 1: watchman: not found" on start).
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get install -y --no-install-recommends \
         autoconf \
@@ -20,6 +22,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         m4 \
         unixodbc-dev \
         unzip \
+        watchman \
         xsltproc \
     && sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen \
     && locale-gen \
