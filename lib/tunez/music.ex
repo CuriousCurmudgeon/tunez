@@ -1,7 +1,7 @@
 defmodule Tunez.Music do
   use Ash.Domain,
     otp_app: :tunez,
-    extensions: [AshJsonApi.Domain, AshPhoenix]
+    extensions: [AshGraphql.Domain, AshJsonApi.Domain, AshPhoenix]
 
   json_api do
     routes do
@@ -19,6 +19,19 @@ defmodule Tunez.Music do
         patch :update
         delete :destroy
       end
+    end
+  end
+
+  graphql do
+    queries do
+      get Tunez.Music.Artist, :get_artist_by_id, :read
+      list Tunez.Music.Artist, :search_artists, :search
+    end
+
+    mutations do
+      create Tunez.Music.Artist, :create_artist, :create
+      update Tunez.Music.Artist, :update_artist, :update
+      destroy Tunez.Music.Artist, :destroy_artist, :destroy
     end
   end
 
