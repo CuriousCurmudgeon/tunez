@@ -19,6 +19,9 @@ claude: (exec "claude")
 # Open a login shell inside the running dev container
 shell: (exec "bash" "-l")
 
+# Run the application inside the running dev container
+run: (exec "iex -S mix phx.server")
+
 # Run an arbitrary command inside the running dev container, e.g. `just exec mix test`
 exec +args:
     #!/usr/bin/env bash
