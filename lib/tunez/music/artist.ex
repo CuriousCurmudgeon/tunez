@@ -7,6 +7,7 @@ defmodule Tunez.Music.Artist do
 
   json_api do
     type "artist"
+    includes [:albums]
   end
 
   postgres do
@@ -64,6 +65,7 @@ defmodule Tunez.Music.Artist do
   relationships do
     has_many :albums, Tunez.Music.Album do
       sort year_released: :desc
+      public? true
     end
   end
 
