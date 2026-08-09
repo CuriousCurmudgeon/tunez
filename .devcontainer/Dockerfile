@@ -25,6 +25,12 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && locale-gen \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Firefox for the firefox-devtools MCP server, which drives a browser it launches
+# in-container. Runs headless (no display needed); firefox-esr covers version 100+.
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get install -y --no-install-recommends firefox-esr \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # Elixir expects a UTF-8 locale; without it the BEAM warns and can mishandle strings.
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
