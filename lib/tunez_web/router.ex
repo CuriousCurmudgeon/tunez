@@ -6,31 +6,37 @@ defmodule TunezWeb.Router do
   import AshAuthentication.Plug.Helpers
 
   pipeline :graphql do
-    plug :load_from_bearer
-    plug :set_actor, :user
-    plug AshGraphql.Plug
+    plug(:load_from_bearer)
+    plug(:set_actor, :user)
+    plug(AshGraphql.Plug)
   end
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, html: {TunezWeb.Layouts, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
-    plug :load_from_session
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, html: {TunezWeb.Layouts, :root})
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
+    plug(:load_from_session)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
-    plug :load_from_bearer
-    plug :set_actor, :user
+    plug(:accepts, ["json"])
+    plug(:load_from_bearer)
+    plug(:set_actor, :user)
   end
 
   scope "/", TunezWeb do
-    pipe_through :browser
+    pipe_through(:browser)
 
     ash_authentication_live_session :authenticated_routes do
+      live("/", Artists.IndexLive)
+      live("/artists/new", Artists.FormLive, :new)
+      live("/artists/:id", Artists.ShowLive)
+      live("/artists/:id/edit", Artists.FormLive, :edit)
+      live("/artists/:artist_id/albums/new", Albums.FormLive, :new)
+      live("/albums/:id/edit", Albums.FormLive, :edit)
       # in each liveview, add one of the following at the top of the module:
       #
       # If an authenticated user must be present:
@@ -45,59 +51,60 @@ defmodule TunezWeb.Router do
   end
 
   scope "/gql" do
-    pipe_through [:graphql]
+    pipe_through([:graphql])
 
-    forward "/playground", Absinthe.Plug.GraphiQL,
+    forward("/playground", Absinthe.Plug.GraphiQL,
       schema: Module.concat(["TunezWeb.GraphqlSchema"]),
       socket: Module.concat(["TunezWeb.GraphqlSocket"]),
       interface: :simple
+    )
 
-    forward "/", Absinthe.Plug, schema: Module.concat(["TunezWeb.GraphqlSchema"])
+    forward("/", Absinthe.Plug, schema: Module.concat(["TunezWeb.GraphqlSchema"]))
   end
 
   scope "/api/json" do
-    pipe_through [:api]
+    pipe_through([:api])
 
-    forward "/swaggerui", OpenApiSpex.Plug.SwaggerUI,
+    forward("/swaggerui", OpenApiSpex.Plug.SwaggerUI,
       path: "/api/json/open_api",
       default_model_expand_depth: 4
+    )
 
-    forward "/", TunezWeb.AshJsonApiRouter
+    forward("/", TunezWeb.AshJsonApiRouter)
   end
 
   scope "/", TunezWeb do
-    pipe_through :browser
+    pipe_through(:browser)
 
-    live "/", Artists.IndexLive
-    live "/artists/new", Artists.FormLive, :new
-    live "/artists/:id", Artists.ShowLive
-    live "/artists/:id/edit", Artists.FormLive, :edit
-    live "/artists/:artist_id/albums/new", Albums.FormLive, :new
-    live "/albums/:id/edit", Albums.FormLive, :edit
-    auth_routes AuthController, Tunez.Accounts.User, path: "/auth"
-    sign_out_route AuthController
+    auth_routes(AuthController, Tunez.Accounts.User, path: "/auth")
+    sign_out_route(AuthController)
 
     # Remove these if you'd like to use your own authentication views
-    sign_in_route register_path: "/register",
-                  reset_path: "/reset",
-                  auth_routes_prefix: "/auth",
-                  on_mount: [{TunezWeb.LiveUserAuth, :live_no_user}],
-                  overrides: [
-                    TunezWeb.AuthOverrides,
-                    Elixir.AshAuthentication.Phoenix.Overrides.Default
-                  ]
+    sign_in_route(
+      register_path: "/register",
+      reset_path: "/reset",
+      auth_routes_prefix: "/auth",
+      on_mount: [{TunezWeb.LiveUserAuth, :live_no_user}],
+      overrides: [
+        TunezWeb.AuthOverrides,
+        Elixir.AshAuthentication.Phoenix.Overrides.Default
+      ]
+    )
 
     # Remove this if you do not want to use the reset password feature
-    reset_route auth_routes_prefix: "/auth",
-                overrides: [
-                  TunezWeb.AuthOverrides,
-                  Elixir.AshAuthentication.Phoenix.Overrides.Default
-                ]
+    reset_route(
+      auth_routes_prefix: "/auth",
+      overrides: [
+        TunezWeb.AuthOverrides,
+        Elixir.AshAuthentication.Phoenix.Overrides.Default
+      ]
+    )
 
     # Remove this if you do not use the confirmation strategy
-    confirm_route Tunez.Accounts.User, :confirm_new_user,
+    confirm_route(Tunez.Accounts.User, :confirm_new_user,
       auth_routes_prefix: "/auth",
       overrides: [TunezWeb.AuthOverrides, Elixir.AshAuthentication.Phoenix.Overrides.Default]
+    )
 
     # Remove this if you do not use the magic link strategy.
     magic_sign_in_route(Tunez.Accounts.User, :magic_link,
@@ -121,10 +128,10 @@ defmodule TunezWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      live_dashboard "/dashboard", metrics: TunezWeb.Telemetry
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+      live_dashboard("/dashboard", metrics: TunezWeb.Telemetry)
+      forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end
 end

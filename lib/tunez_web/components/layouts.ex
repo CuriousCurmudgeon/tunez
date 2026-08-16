@@ -10,7 +10,7 @@ defmodule TunezWeb.Layouts do
   """
   use TunezWeb, :html
 
-  embed_templates "layouts/*"
+  embed_templates("layouts/*")
 
   def app(assigns) do
     ~H"""
@@ -27,6 +27,7 @@ defmodule TunezWeb.Layouts do
             </span>
           </.link>
         </div>
+        <.user_info current_user={@current_user} socket={@socket} />
       </div>
       <div class="px-4">
         <.flash_group flash={@flash} />
