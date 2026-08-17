@@ -74,7 +74,8 @@ config :spark,
 config :tunez,
   ecto_repos: [Tunez.Repo],
   generators: [timestamp_type: :utc_datetime],
-  ash_domains: [Tunez.Accounts, Tunez.Music]
+  ash_domains: [Tunez.Accounts, Tunez.Music],
+  ash_authentication: [return_error_on_invalid_magic_link_token?: true]
 
 # Configures the endpoint
 config :tunez, TunezWeb.Endpoint,
